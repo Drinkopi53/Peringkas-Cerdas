@@ -2,7 +2,7 @@
 
 **Proyek:** Buat sebuah aplikasi web bernama "Peringkas Cerdas".
 
-**Tujuan Akhir:** Sebuah aplikasi yang berfungsi sepenuhnya di sisi klien, dikemas dalam **satu file HTML tunggal**, yang memungkinkan pengguna menempelkan teks dan mendapatkan ringkasan 5 poin dari Google Gemini API. Aplikasi ini harus memiliki desain yang sangat modern dan menarik.
+**Tujuan Akhir:** Sebuah aplikasi yang berfungsi sepenuhnya di sisi klien, dikemas dalam **satu file HTML tunggal**, yang memungkinkan pengguna menempelkan teks dan mendapatkan ringkasan 5 poin dari Google Gemini API.
 
 Ikuti instruksi ini secara bertahap.
 
@@ -17,88 +17,88 @@ Pada tahap ini, fokuslah untuk membuat kerangka dasar HTML dan mengimpor semua t
    * Di dalam \<head\>, tambahkan tag \<meta\> untuk charset="UTF-8" dan viewport.  
    * Berikan judul halaman: \<title\>Peringkas Cerdas\</title\>.  
 3. **Impor Teknologi via CDN:**  
-   * Di dalam \<head\>, tambahkan link untuk memuat **Tailwind CSS**.  
-   * Di dalam \<head\>, tambahkan link untuk memuat font **Inter** dari Google Fonts.  
+   * Di dalam \<head\>, tambahkan link untuk memuat **Tailwind CSS**:
+     \<script src="https://cdn.tailwindcss.com"\>\</script\>
+
+   * Di dalam \<head\>, tambahkan link untuk memuat font **Inter** dari Google Fonts:
+     \<link rel="preconnect" href="https://fonts.googleapis.com"\>
+     \<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin\>
+     \<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700\&display=swap" rel="stylesheet"\>
+
 4. **Buat Struktur Konten Awal (Unstyled):**  
-   * Di dalam \<body\>, buat elemen-elemen HTML berikut: header, main (dengan div untuk input, tombol, hasil, loading, error), dan footer.
+   * Di dalam \<body\>, buat elemen-elemen HTML berikut tanpa styling terlebih dahulu:
+     * header dengan h1 (Peringkas Cerdas) dan p (tagline).
+     * main yang akan berisi area input dan hasil.
+     * div untuk area input, berisi label dan textarea.
+     * div untuk tombol aksi, berisi button (Ringkas Sekarang).
+     * div untuk area hasil (awalnya kosong).
+     * div untuk indikator loading (awalnya kosong).
+     * div untuk pesan error (awalnya kosong).
+     * footer dengan teks hak cipta.
 
-### **Bagian 2: Implementasi Desain Dasar (Styling Awal dengan Tailwind CSS)**
+### **Bagian 2: Implementasi Desain dan Antarmuka Pengguna (Styling dengan Tailwind CSS)**
 
-Gunakan kelas-kelas Tailwind CSS untuk menata semua elemen HTML yang telah Anda buat. Ini adalah fondasi sebelum kita melakukan desain ulang di Bagian 5\.
+Sekarang, gunakan kelas-kelas Tailwind CSS untuk menata semua elemen HTML yang telah Anda buat di Bagian 1\.
 
 1. **Layout Utama:**  
-   * Atur warna latar belakang dasar, warna teks, dan font pada \<body\>.  
-   * Buat div pembungkus utama dengan kelas container mx-auto max-w-3xl px-4 py-8 md:py-12.  
+   * Pada \<body\>, atur warna latar belakang (bg-gray-50) dan warna teks utama (text-gray-800). Atur font menjadi font-family: 'Inter', sans-serif; menggunakan tag \<style\>.
+   * Buat sebuah div pembungkus utama di dalam \<body\> dengan kelas container mx-auto max-w-3xl px-4 py-8 md:py-12.
 2. **Styling Elemen:**  
-   * **Header:** Pusatkan teksnya. Buat h1 besar dan tebal, dan p lebih kecil.  
-   * **Main Content Area:** Beri latar belakang putih, padding, sudut membulat, dan bayangan.  
-   * **Area Input (**textarea**):** Buat lebarnya penuh, beri padding, border, sudut membulat, dan efek focus.  
-   * **Tombol Aksi (**button**):** Beri gaya dasar (warna, padding, sudut membulat).  
-   * **Area Hasil, Loading, Error:** Beri struktur dasar dan styling awal.  
-   * **Footer:** Pusatkan teksnya dan beri warna abu-abu.  
+   * **Header:** Pusatkan teksnya. Buat h1 menjadi besar dan tebal (text-4xl md:text-5xl font-bold). Buat p di bawahnya lebih kecil (text-lg text-gray-600).
+   * **Main Content Area:** Beri latar belakang putih, padding, sudut membulat, dan bayangan (bg-white p-6 md:p-8 rounded-2xl shadow-lg).
+   * **Area Input (textarea):** Buat lebarnya penuh, beri padding, border, sudut membulat, dan efek focus yang jelas (w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500). Beri placeholder yang deskriptif.
+   * **Tombol Aksi (button):** Beri warna latar belakang biru, teks putih, padding, sudut membulat, dan efek hover & focus yang menarik (bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300).
+   * **Area Hasil:** Beri margin-top, padding-top, dan border-top. Di dalamnya, buat h2 (Hasil Ringkasan) menjadi tebal. Buat tombol "Salin Hasil" di sebelahnya dengan gaya sekunder (bg-gray-200). Area untuk output ringkasan diberi latar belakang abu-abu muda (bg-gray-100).
+   * **Indikator Loading:** Buat sebuah *spinner* animasi sederhana menggunakan CSS dan div. Pusatkan secara horizontal dan vertikal, dan tambahkan teks di bawahnya.
+   * **Pesan Error:** Desain sebagai kotak peringatan dengan latar belakang dan border merah (bg-red-100 text-red-700 border border-red-300).
+   * **Footer:** Pusatkan teksnya dan beri warna abu-abu (text-center mt-8 text-gray-500).
 3. **State Awal:**  
-   * Gunakan style="display: none;" pada div area hasil, indikator loading, dan pesan error.
+   * Gunakan style="display: none;" pada div area hasil, indikator loading, dan pesan error. Mereka hanya akan muncul saat dibutuhkan melalui JavaScript.
 
 ### **Bagian 3: Fungsionalitas Inti (Logika JavaScript & Integrasi API)**
 
-Tulis semua logika JavaScript di dalam tag \<script\> di bagian bawah \<body\>.
+Ini adalah bagian terpenting. Tulis semua logika JavaScript di dalam tag \<script\> di bagian bawah \<body\>.
 
 1. **Referensi DOM:**  
-   * Buat variabel untuk semua elemen interaktif.  
+   * Buat variabel untuk semua elemen interaktif yang Anda perlukan (textarea, tombol, area hasil, output ringkasan, loading, error, tombol salin).
 2. **Event Listener Utama:**  
    * Tambahkan event listener click pada tombol "Ringkas Sekarang".  
-3. **Fungsi** async **untuk Meringkas:**  
+3. **Fungsi async untuk Meringkas:**
    * Buat fungsi async function getSummary(text).  
-   * **Validasi Input:** Hentikan fungsi jika input kosong.  
-   * **Kelola UI State:** Tampilkan loading, sembunyikan elemen lain, nonaktifkan tombol.  
-   * **Panggilan** fetch **ke Gemini API:**  
-     * Gunakan try...catch...finally.  
-     * Targetkan model gemini-2.0-flash:generateContent.  
-     * Gunakan placeholder untuk API Key: const apiKey \= ""; dengan komentar yang jelas.  
-     * Gunakan prompt yang tepat: Buatkan 5 poin ringkasan utama (bullet points) dari teks berikut, dalam Bahasa Indonesia:\\n\\n"\[TEKS\_DARI\_PENGGUNA\]"  
-   * **Proses Respons & Error:** Tampilkan hasil atau pesan error di UI.  
-   * **Blok** finally**:** Selalu kembalikan UI ke keadaan normal (sembunyikan loading, aktifkan tombol).
+   * **Validasi Input:** Di dalam event listener, periksa jika teks dari textarea kosong. Jika ya, tampilkan pesan error dan hentikan fungsi.
+   * **Kelola UI State:**
+     * Sembunyikan resultContainer dan errorMessage.
+     * Tampilkan loadingIndicator.
+     * Nonaktifkan summarizeBtn dan ubah gayanya menjadi opacity-50 cursor-not-allowed.
+   * **Panggilan fetch ke Gemini API:**
+     * Gunakan try...catch untuk menangani error jaringan atau API.
+     * **URL & API Key:** Targetkan model gemini-2.0-flash:generateContent. Gunakan placeholder untuk API Key: const apiKey \= ""; dan tambahkan komentar bahwa kunci API harus diisi.
+     * **Prompt:** Gunakan prompt yang **tepat** ini: Buatkan 5 poin ringkasan utama (bullet points) dari teks berikut, dalam Bahasa Indonesia:\\n\\n"\[TEKS\_DARI\_PENGGUNA\]"
+     * **Payload:** Buat struktur body JSON yang benar sesuai dokumentasi Gemini API.
+   * **Proses Respons:**
+     * Di dalam try, jika response.ok, parse JSON. Ekstrak teks ringkasan dari response.candidates\[0\].content.parts\[0\].text.
+     * **Tampilkan Hasil:** Ubah teks hasil (yang mungkin mengandung markdown \*) menjadi elemen \<li\> HTML dan masukkan ke dalam summaryOutput. Tampilkan resultContainer.
+   * **Tangani Error:**
+     * Di dalam catch, tampilkan pesan error yang relevan di errorMessage.
+   * **Finalisasi UI (Blok finally):**
+     * Sembunyikan loadingIndicator.
+     * Aktifkan kembali summarizeBtn dan kembalikan gayanya seperti semula.
 
-### **Bagian 4: Fitur Tambahan Awal**
+### **Bagian 4: Fitur Tambahan dan Validasi Akhir**
 
-Selesaikan fungsionalitas kecil sebelum desain ulang.
+Selesaikan fungsionalitas kecil dan pastikan semua persyaratan terpenuhi.
 
 1. **Fungsi Salin ke Clipboard:**  
-   * Implementasikan fungsi salin pada tombol "Salin Hasil".  
-   * Berikan umpan balik visual singkat saat berhasil menyalin (misal: teks tombol berubah menjadi "Tersalin\!").
-
-### **Bagian 5: Desain Ulang Modern & Peningkatan UX**
-
-Sekarang, tingkatkan desain dari Bagian 2 menjadi sesuatu yang luar biasa, modern, dan futuristik.
-
-1. **Palet Warna & Tema Gelap (Dark Mode):**  
-   * Ubah \<body\> menjadi tema gelap: bg-gray-900 text-gray-200.  
-   * Gunakan **Glassmorphism** untuk kontainer utama (main): Beri warna latar belakang semi-transparan dengan efek blur. Contoh: bg-white/10 backdrop-blur-lg border border-white/20.  
-2. **Tombol Aksi dengan Gradient:**  
-   * Ubah tombol "Ringkas Sekarang" agar menggunakan **gradient** yang cerah, misalnya dari ungu ke biru (bg-gradient-to-r from-purple-500 to-blue-500).  
-   * Tambahkan transisi halus dan efek hover yang membuatnya sedikit lebih cerah atau membesar (transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50).  
-3. **Animasi & Transisi Halus:**  
-   * Ganti display: none dengan kelas-kelas transisi dari Tailwind. Gunakan opacity-0, invisible, scale-95 untuk state tersembunyi, dan opacity-100, visible, scale-100 untuk state terlihat, ditambah dengan kelas transition-all duration-300.  
-   * Terapkan ini pada area hasil, indikator loading, dan pesan error agar muncul dan menghilang dengan efek *fade* dan *scale* yang lembut.  
-4. **Desain Area Hasil yang Lebih Baik:**  
-   * Hilangkan latar belakang abu-abu pada summaryOutput.  
-   * Untuk setiap \<li\> hasil ringkasan, berikan padding, border-bottom yang tipis (border-white/10), dan tambahkan ikon SVG kecil (misalnya ikon panah atau *bullet*) di sebelah kiri setiap poin untuk hierarki visual yang lebih baik.  
-5. **Ikonografi Modern (SVG):**  
-   * Ganti teks "Salin Hasil" pada tombol salin dengan **ikon SVG** untuk menyalin. Saat berhasil disalin, ganti ikon tersebut dengan ikon centang (check mark) selama beberapa detik. Gunakan ikon dari sumber seperti Heroicons atau Feather Icons.  
-6. **Indikator Loading yang Elegan:**  
-   * Ganti spinner standar dengan animasi yang lebih modern, misalnya tiga titik yang berdenyut (pulsing dots) dengan warna gradient yang sama dengan tombol utama.
-
-### **Bagian 6: Validasi Akhir**
-
-Selesaikan fungsionalitas dan pastikan semua persyaratan terpenuhi.
-
-1. **Daftar Periksa Final (Validasi Mandiri):**  
+   * Tambahkan event listener click pada copyBtn.
+   * Saat diklik, ambil innerText dari summaryOutput.
+   * Gunakan document.execCommand('copy') (setelah membuat textarea sementara) untuk menyalin teks ke clipboard.
+   * Ubah teks tombol menjadi "Tersalin\!" selama 2-3 detik sebagai umpan balik visual, lalu kembalikan ke "Salin Hasil".
+2. **Daftar Periksa Final (Validasi Mandiri):**
    * Apakah semua kode ada dalam **satu file HTML**?  
-   * Apakah aplikasi sepenuhnya responsif dan terlihat luar biasa di mode gelap?  
-   * Apakah semua transisi dan animasi berjalan mulus?  
+   * Apakah aplikasi sepenuhnya responsif?
    * Apakah tidak ada *framework* JS yang digunakan?  
    * Apakah tidak ada logika backend, server, atau database?  
-   * Apakah semua state (loading, error, success) berfungsi dengan benar dan terlihat elegan?
+   * Apakah tidak ada fitur meringkas dari URL?
+   * Apakah semua state (loading, error, success) berfungsi dengan benar?
 
-Silakan mulai pengembangan berdasarkan panduan bertahap yang komprehensif ini.
-
+Silakan mulai pengembangan berdasarkan panduan bertahap ini.

@@ -79,7 +79,7 @@
 
         // Kunci API Google Gemini - HARUS DIISI OLEH PENGGUNA
         // Dapatkan kunci API Anda dari Google AI Studio: https://aistudio.google.com/app/apikey
-        const apiKey = "AIzaSyDet_RXvk9Xb1W67qxe0aoIr_iCst2qOt0";
+        const apiKey = "";
 
         summarizeBtn.addEventListener('click', async () => {
             const textToSummarize = inputText.value.trim();
@@ -106,8 +106,8 @@
             summarizeBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             const prompt = `Buatkan 5 poin ringkasan utama (bullet points) dari teks berikut, dalam Bahasa Indonesia:\n\n"${textToSummarize}"`;
-            // Menggunakan model gemini-1.5-flash-latest seperti yang diputuskan dalam rencana
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+            // Memperbarui model ke gemini-2.0-flash sesuai Petunjuk.md
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
                 const response = await fetch(apiUrl, {
