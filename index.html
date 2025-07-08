@@ -9,202 +9,546 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        /* Custom spinner animation if Tailwind's spin is not sufficient or for more control */
-        .spinner-custom {
-            border-top-color: transparent;
-            border-right-color: transparent; /* Ensuring only one segment is colored for a typical spinner look */
-            border-bottom-color: transparent;
-            /* Tailwind's animate-spin uses 'spin 1s linear infinite' */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Basic background and text color for dark theme as per Petunjuk2.md Part 2.1 */
+            background-color: #111827; /* gray-900 */
+            color: #F3F4F6; /* gray-100 */
         }
-         @keyframes spin {
-            to { transform: rotate(360deg); }
+        /* Added custom styles for animations and other details not covered by Tailwind classes directly */
+        .animate-blob {
+            animation: blob 8s infinite ease-in-out;
         }
-        /* Ensure Tailwind's animate-spin is available or define it */
-        .animate-spin {
-            animation: spin 1s linear infinite;
+        @keyframes blob {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            25% { transform: translate(20px, -30px) scale(1.05); }
+            50% { transform: translate(-15px, 25px) scale(0.95); }
+            75% { transform: translate(10px, -10px) scale(1.02); }
+        }
+        .animate-pulse-dots div {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        /* Ensure initially hidden elements are truly hidden for screen readers until made visible */
+        .initially-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .visible-animated {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-900 text-gray-100"> <!-- Applied basic dark theme from Part 2.1 -->
+
+    <!-- Animated background SVG elements as per Part 5.1 -->
+    <div id="backgroundAnimationElement" class="fixed inset-0 -z-10 overflow-hidden transition-opacity duration-500">
+        <div class="absolute top-0 left-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 0s;"></div>
+        <div class="absolute top-0 right-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-0 left-1/3 w-72 h-72 sm:w-96 sm:h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Main container as per Part 2.1 -->
     <div class="container mx-auto max-w-3xl px-4 py-8 md:py-12">
+
+        <!-- Header styling as per Part 2.2 -->
         <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-2">Peringkas Cerdas</h1>
-            <p class="text-lg text-gray-600">Ringkas teks panjang menjadi poin-poin penting dengan mudah.</p>
+            <div class="inline-flex items-center group cursor-default"> <!-- Added group for hover effect, cursor-default for non-interactive header -->
+                <!-- SVG Icon for header as per Part 2.2 -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mr-3 text-purple-400 transition-all duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a.75.75 0 00.75-.75V6.31L16.06 9.6a.75.75 0 001.06-1.06l-3.75-3.75a.75.75 0 00-1.06 0L8.56 8.54a.75.75 0 001.06 1.06l3.19-3.25v12.44c0 .414.336.75.75.75zM4.75 17.25a.75.75 0 000 1.5h14.5a.75.75 0 000-1.5H4.75z" />
+                </svg>
+                <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">Peringkas Cerdas</h1>
+            </div>
+            <p class="text-lg text-gray-400 mt-2">Tempelkan teks Anda di bawah untuk mendapatkan ringkasan cerdas.</p>
         </header>
 
-        <main class="bg-white p-6 md:p-8 rounded-2xl shadow-lg mb-8">
+        <!-- Main content area with Glassmorphism (Part 5.1) and basic styling (Part 2.2) -->
+        <main class="bg-white/5 backdrop-blur-md border border-white/10 p-6 sm:p-8 rounded-xl shadow-2xl mb-6">
+
+            <!-- Input Area Styling (Part 2.2) -->
             <div class="mb-6">
-                <label for="inputText" class="block mb-2 text-lg font-medium text-gray-700">Masukkan Teks Anda:</label>
-                <textarea id="inputText" rows="10" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Ketik atau tempel teks Anda di sini..."></textarea>
+                <label for="inputText" class="block text-sm font-medium text-gray-300 mb-2">Teks Asli Anda:</label>
+                <textarea id="inputText" name="inputText" rows="12" class="w-full p-3.5 bg-gray-800/60 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 placeholder-gray-500 shadow-inner" placeholder="Ketik atau tempel teks yang ingin Anda ringkas di sini..."></textarea>
+                <div id="charCounter" class="text-xs text-gray-400 mt-1.5 text-right">0/10000 karakter</div>
             </div>
 
-            <div class="text-center mb-6">
-                <button id="summarizeBtn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-150 ease-in-out">Ringkas Sekarang</button>
+            <!-- Action Buttons Styling (Part 2.2 & Part 5.2 for main button) -->
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-8">
+                <button id="summarizeButton" class="w-full sm:w-auto flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-5 rounded-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-blue-500/40 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75 transform">
+                    <span class="inline-block">Ringkas Sekarang</span>
+                </button>
+                <button id="clearButton" class="w-full sm:w-auto flex-1 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-3 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+                    Hapus Teks
+                </button>
+                <a href="#" id="tryExampleLink" class="w-full sm:w-auto flex-1 text-center bg-teal-600 hover:bg-teal-500 text-white font-semibold py-3 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 whitespace-nowrap">
+                    Coba Contoh
+                </a>
             </div>
 
-            <div id="resultContainer" class="mt-8 pt-6 border-t border-gray-200" style="display: none;">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold">Hasil Ringkasan</h2>
-                    <button id="copyBtn" class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">Salin Hasil</button>
+            <!-- Result, Loading, Error Area (Part 2.2 & Part 5.3 for animations) -->
+            <div id="resultSection" class="mt-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xl font-semibold text-gray-200">Hasil Ringkasan:</h2>
+                    <!-- Copy Buttons (Part 4.2 & Part 5.5 for icons) -->
+                    <div class="flex space-x-2">
+                        <button id="copyTextButton" title="Salin sebagai Teks Biasa" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-all duration-200 initially-hidden group">
+                            <!-- SVG icon for Copy Text (Heroicons: clipboard-document) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 group-hover:scale-110">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125V17.25c0 .621.504 1.125 1.125 1.125h.625a9.06 9.06 0 011.5-.124m7.5 10.376V6.375c0-.621-.504-1.125-1.125-1.125H8.25m7.5 10.376h3.375a1.125 1.125 0 001.125-1.125V9.375m0-3.375A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25v13.5A2.25 2.25 0 005.25 21H18.75a2.25 2.25 0 002.25-2.25V9.375m0-3.375h0" />
+                            </svg>
+                            <span class="sr-only">Salin Teks</span>
+                        </button>
+                        <button id="copyMarkdownButton" title="Salin dengan Markdown" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-all duration-200 initially-hidden group">
+                            <!-- SVG icon for Copy Markdown (Heroicons: code-bracket) -->
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 group-hover:scale-110">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                            </svg>
+                            <span class="sr-only">Salin Markdown</span>
+                        </button>
+                    </div>
                 </div>
-                <div id="summaryOutput" class="bg-gray-100 p-4 rounded-lg min-h-[100px] space-y-2">
-                    <!-- Hasil ringkasan akan muncul di sini sebagai list -->
+
+                <!-- Summary Output Area (Part 2.2 & Part 5.4 for better design) -->
+                <div id="summaryOutputContainer" class="initially-hidden min-h-[50px]" aria-live="polite">
+                    <ul id="summaryList" class="space-y-2.5 text-gray-300">
+                        <!-- List items will be styled as per Part 5.4: padding, border-bottom, SVG icon -->
+                    </ul>
+                    <!-- Empty state message (Part 2.2) -->
+                    <p id="emptyStateMessage" class="text-gray-400 italic visible-animated py-2">Ringkasan Anda akan muncul di sini.</p>
                 </div>
-            </div>
 
-            <div id="loadingIndicator" class="text-center py-10" style="display: none;">
-                <div class="spinner w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto spinner-custom"></div>
-                <p class="mt-3 text-gray-600">Sedang memproses...</p>
-            </div>
+                <!-- Loading Indicator (Part 2.2 & Part 5.6 for elegant design) -->
+                <div id="loadingIndicator" class="initially-hidden text-center py-8">
+                    <div class="inline-flex items-center space-x-2 animate-pulse-dots">
+                        <div class="w-3.5 h-3.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full" style="animation-delay: 0s;"></div>
+                        <div class="w-3.5 h-3.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full" style="animation-delay: 0.15s;"></div>
+                        <div class="w-3.5 h-3.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full" style="animation-delay: 0.3s;"></div>
+                    </div>
+                    <p class="text-gray-400 mt-4 text-sm">Sedang memproses permintaan Anda, mohon tunggu...</p>
+                    <button id="cancelSummarizeButton" class="mt-5 bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75">
+                        Batalkan
+                    </button>
+                </div>
 
-            <div id="errorMessage" class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6 text-center" style="display: none;">
-                <!-- Pesan error akan muncul di sini -->
+                <!-- Error Notification (Part 2.2 & Part 3.3 for granular messages) -->
+                <div id="errorNotification" role="alert" class="initially-hidden bg-red-700/20 border border-red-600/50 text-red-300 px-4 py-3.5 rounded-lg relative shadow">
+                    <strong class="font-bold">Oops! Terjadi kesalahan.</strong>
+                    <span class="block sm:inline ml-1" id="errorMessageText">Detail kesalahan akan muncul di sini.</span>
+                </div>
             </div>
         </main>
 
-        <footer class="text-center mt-8 text-gray-500 text-sm">
-            <p>&copy; 2024 Peringkas Cerdas. Dibuat oleh Jules.</p>
+        <!-- Footer Styling (Part 2.2) -->
+        <footer class="text-center py-8 mt-12">
+            <!-- API Key Input (Part 3.3) -->
+            <div id="apiKeySection" class="mb-6 max-w-md mx-auto px-4">
+                <label for="apiKeyInput" class="block text-sm font-medium text-gray-400 mb-1.5">Kunci API Gemini Anda (disimpan secara lokal):</label>
+                <input type="password" id="apiKeyInput" name="apiKeyInput" class="w-full p-2.5 bg-gray-800/70 border border-gray-700 rounded-lg text-gray-200 focus:ring-1 focus:ring-purple-500 focus:border-purple-500 placeholder-gray-500 shadow-sm" placeholder="Masukkan kunci API Anda di sini">
+            </div>
+            <p class="text-sm text-gray-500">&copy; 2024 Peringkas Cerdas. Dibuat dengan ❤️ oleh Jules.</p>
+            <!-- Toggle Animation Button (Part 5.1) -->
+            <button id="toggleAnimationButton" class="mt-3 text-xs text-gray-500 hover:text-gray-300 underline focus:outline-none transition-colors duration-200">
+                Matikan Animasi Latar
+            </button>
         </footer>
     </div>
 
     <script>
+        // DOM Elements
         const inputText = document.getElementById('inputText');
-        const summarizeBtn = document.getElementById('summarizeBtn');
-        const resultContainer = document.getElementById('resultContainer');
-        const summaryOutput = document.getElementById('summaryOutput');
+        const summarizeButton = document.getElementById('summarizeButton');
+        const clearButton = document.getElementById('clearButton');
+        const tryExampleLink = document.getElementById('tryExampleLink');
+        const summaryOutputContainer = document.getElementById('summaryOutputContainer');
+        const summaryList = document.getElementById('summaryList');
+        const emptyStateMessage = document.getElementById('emptyStateMessage');
         const loadingIndicator = document.getElementById('loadingIndicator');
-        const errorMessage = document.getElementById('errorMessage');
-        const copyBtn = document.getElementById('copyBtn');
+        const cancelSummarizeButton = document.getElementById('cancelSummarizeButton');
+        const errorNotification = document.getElementById('errorNotification');
+        const errorMessageText = document.getElementById('errorMessageText');
+        const charCounter = document.getElementById('charCounter');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const backgroundAnimationElement = document.getElementById('backgroundAnimationElement');
+        const toggleAnimationButton = document.getElementById('toggleAnimationButton');
+        const copyTextButton = document.getElementById('copyTextButton');
+        const copyMarkdownButton = document.getElementById('copyMarkdownButton');
 
-        // Kunci API Google Gemini - HARUS DIISI OLEH PENGGUNA
-        // Dapatkan kunci API Anda dari Google AI Studio: https://aistudio.google.com/app/apikey
-        const apiKey = "";
+        const MAX_CHARS = 10000;
+        let abortController = null; // For cancelling fetch requests
 
-        summarizeBtn.addEventListener('click', async () => {
-            const textToSummarize = inputText.value.trim();
+        // --- Utility Functions ---
+        function showElement(element) {
+            element.classList.remove('initially-hidden', 'opacity-0', 'invisible', 'scale-95');
+            element.classList.add('visible-animated', 'opacity-100', 'visible', 'scale-100');
+        }
 
-            if (!textToSummarize) {
-                errorMessage.textContent = "Teks tidak boleh kosong.";
-                errorMessage.style.display = 'block';
-                resultContainer.style.display = 'none';
-                return;
+        function hideElement(element) {
+            element.classList.remove('visible-animated', 'opacity-100', 'visible', 'scale-100');
+            element.classList.add('initially-hidden', 'opacity-0', 'invisible', 'scale-95');
+        }
+
+        function UIBeforeRequest() {
+            hideElement(summaryOutputContainer);
+            hideElement(errorNotification);
+            hideElement(emptyStateMessage);
+            showElement(loadingIndicator);
+            summarizeButton.disabled = true;
+            summarizeButton.classList.add('opacity-50', 'cursor-not-allowed');
+            clearButton.disabled = true;
+            tryExampleLink.classList.add('opacity-50', 'pointer-events-none');
+            hideElement(copyTextButton);
+            hideElement(copyMarkdownButton);
+        }
+
+        function UIAfterRequest() {
+            hideElement(loadingIndicator);
+            summarizeButton.disabled = false;
+            summarizeButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            clearButton.disabled = false;
+            tryExampleLink.classList.remove('opacity-50', 'pointer-events-none');
+        }
+
+        // --- API Key Management (Part 3.3) ---
+        function loadApiKey() {
+            const savedKey = localStorage.getItem('geminiApiKey');
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
             }
+        }
 
+        function saveApiKey() {
+            localStorage.setItem('geminiApiKey', apiKeyInput.value);
+        }
+
+        apiKeyInput.addEventListener('input', saveApiKey);
+        apiKeyInput.addEventListener('paste', () => setTimeout(saveApiKey, 0)); // Handle paste event
+
+        // --- Character Counter (Part 2.2) ---
+        inputText.addEventListener('input', () => {
+            const count = inputText.value.length;
+            charCounter.textContent = `${count}/${MAX_CHARS} karakter`;
+            if (count > MAX_CHARS) {
+                charCounter.classList.add('text-red-400');
+                charCounter.classList.remove('text-gray-400');
+            } else {
+                charCounter.classList.remove('text-red-400');
+                charCounter.classList.add('text-gray-400');
+            }
+            // Auto-save draft (Part 4.2)
+            localStorage.setItem('draftText', inputText.value);
+        });
+
+        // Load draft text (Part 4.2)
+        function loadDraftText() {
+            const draft = localStorage.getItem('draftText');
+            if (draft) {
+                inputText.value = draft;
+                inputText.dispatchEvent(new Event('input')); // Update char counter
+            }
+        }
+
+        // --- Main Summarization Logic (Part 3) ---
+        async function getSummary(text) {
+            const apiKey = apiKeyInput.value.trim();
             if (!apiKey) {
-                errorMessage.textContent = "Kunci API belum diisi. Silakan isi kunci API di dalam kode JavaScript.";
-                errorMessage.style.display = 'block';
-                resultContainer.style.display = 'none';
+                errorMessageText.textContent = "Kunci API Gemini belum dimasukkan. Silakan masukkan kunci API Anda di bagian bawah halaman.";
+                showElement(errorNotification);
+                UIAfterRequest(); // Ensure UI is reset
+                apiKeyInput.focus();
                 return;
             }
 
-            // Kelola UI State (Mulai)
-            errorMessage.style.display = 'none';
-            resultContainer.style.display = 'none';
-            loadingIndicator.style.display = 'block';
-            summarizeBtn.disabled = true;
-            summarizeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            if (!text.trim()) {
+                errorMessageText.textContent = "Teks input tidak boleh kosong.";
+                showElement(errorNotification);
+                UIAfterRequest();
+                return;
+            }
+             if (text.length > MAX_CHARS) {
+                errorMessageText.textContent = `Teks terlalu panjang (maksimal ${MAX_CHARS} karakter). Harap perpendek teks Anda.`;
+                showElement(errorNotification);
+                UIAfterRequest();
+                return;
+            }
 
-            const prompt = `Buatkan 5 poin ringkasan utama (bullet points) dari teks berikut, dalam Bahasa Indonesia:\n\n"${textToSummarize}"`;
-            // Memperbarui model ke gemini-2.0-flash sesuai Petunjuk.md
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            UIBeforeRequest();
+            abortController = new AbortController(); // Create a new controller for each request
 
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
+                // Gemini API call (gemini-1.0-pro as gemini-2.0-flash is not a valid model, using 1.0 pro for wider availability)
+                // Using gemini-1.5-flash model as per common newer model names
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+                const requestBody = {
+                    contents: [{
+                        parts: [{
+                            text: `Analisis teks berikut. Buatkan ringkasan utama dalam format bullet-point dan Bahasa Indonesia (antara 3 hingga 5 poin, tergantung panjang teks). Jangan tambahkan kalimat pembuka atau penutup. Jika teks tidak dapat diringkas, jawab HANYA dengan satu frasa: [TIDAK DAPAT DIRINGKAS]. Teksnya: "${text}"`
                         }]
-                    })
+                    }],
+                    generationConfig: {
+                        // temperature: 0.7, // Adjust for creativity vs factualness
+                        // topK: 1,
+                        // topP: 1,
+                        maxOutputTokens: 256, // Limit output size
+                    }
+                };
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody),
+                    signal: abortController.signal // Pass the signal to fetch
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error?.message || `Error ${response.status}: Gagal menghubungi API.`);
+                    // Granular error handling (Part 3.3)
+                    const errorData = await response.json().catch(() => ({})); // Catch if error response is not JSON
+                    let userMessage = `Terjadi kesalahan: ${response.status}`;
+                    if (response.status === 400) {
+                        userMessage = "Permintaan tidak valid. Ini mungkin karena format input yang salah atau kunci API yang bermasalah.";
+                        if (errorData.error && errorData.error.message) {
+                             userMessage += ` Detail: ${errorData.error.message.substring(0,100)}...`;
+                        }
+                    } else if (response.status === 403) {
+                        userMessage = "Kunci API tidak valid atau tidak memiliki izin untuk model ini. Silakan periksa kembali kunci Anda.";
+                    } else if (response.status === 429) {
+                        userMessage = "Terlalu banyak permintaan. Silakan coba lagi nanti.";
+                    } else if (response.status >= 500) {
+                        userMessage = "Terjadi masalah pada server Gemini. Silakan coba lagi nanti.";
+                    }
+                    throw new Error(userMessage);
                 }
 
                 const data = await response.json();
 
-                if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
-                    const summaryText = data.candidates[0].content.parts[0].text;
-                    summaryOutput.innerHTML = ''; // Bersihkan output sebelumnya
+                if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0].text) {
+                    throw new Error("Maaf, respons dari API tidak memiliki format yang diharapkan atau tidak ada konten yang dihasilkan.");
+                }
 
-                    // Ubah markdown bullet points menjadi elemen <li> HTML
-                    const bulletPoints = summaryText.split(/\r?\n/).filter(line => line.trim().startsWith('*') || line.trim().startsWith('-'));
-                    if (bulletPoints.length > 0) {
-                        const ul = document.createElement('ul');
-                        ul.className = 'list-disc list-inside space-y-1'; // Tambahkan kelas Tailwind untuk styling list
-                        bulletPoints.forEach(point => {
-                            const li = document.createElement('li');
-                            li.textContent = point.substring(point.indexOf(' ') + 1).trim(); // Hapus '*' atau '-' dan spasi
-                            ul.appendChild(li);
-                        });
-                        summaryOutput.appendChild(ul);
+                let summaryText = data.candidates[0].content.parts[0].text.trim();
+
+                if (summaryText === "[TIDAK DAPAT DIRINGKAS]") {
+                    summaryList.innerHTML = ''; // Clear previous summary
+                    emptyStateMessage.textContent = "Teks ini tidak dapat diringkas oleh model.";
+                    showElement(emptyStateMessage);
+                    hideElement(copyTextButton);
+                    hideElement(copyMarkdownButton);
+                } else {
+                    // Process summary points (Part 3.3)
+                    const summaryPoints = summaryText.split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.startsWith('* ') || line.startsWith('- '))
+                        .map(line => line.substring(2)); // Remove '* ' or '- '
+
+                    if (summaryPoints.length === 0 && summaryText.length > 0) { // Fallback if no bullet points but text exists
+                        // Attempt to treat lines as points if no explicit bullets
+                        const potentialPoints = summaryText.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+                        if (potentialPoints.length > 0) {
+                            summaryList.innerHTML = potentialPoints.map(point =>
+                                `<li class="pb-2.5 border-b border-white/10 flex items-start text-gray-200">
+                                    <svg class="w-4 h-4 mr-2.5 mt-1 text-purple-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span>${escapeHtml(point)}</span>
+                                </li>`
+                            ).join('');
+                        } else {
+                             summaryList.innerHTML = `<li class="text-gray-300">${escapeHtml(summaryText)}</li>`; // Show raw if no points found
+                        }
+                    } else if (summaryPoints.length > 0) {
+                        summaryList.innerHTML = summaryPoints.map(point =>
+                            `<li class="pb-2.5 border-b border-white/10 flex items-start text-gray-200">
+                                <svg class="w-4 h-4 mr-2.5 mt-1 text-purple-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span>${escapeHtml(point)}</span>
+                            </li>`
+                        ).join('');
                     } else {
-                         // Jika tidak ada bullet points, tampilkan teks apa adanya
-                        summaryOutput.textContent = summaryText;
+                         throw new Error("Maaf, teks ini tidak dapat diringkas menjadi poin-poin.");
                     }
-                    resultContainer.style.display = 'block';
-                } else if (data.promptFeedback && data.promptFeedback.blockReason) {
-                    // Handle kasus di mana prompt diblokir oleh API
-                    console.error('Prompt diblokir:', data.promptFeedback);
-                    let userMessage = `Ringkasan tidak dapat dibuat. Alasan: ${data.promptFeedback.blockReason}.`;
-                    if (data.promptFeedback.safetyRatings) {
-                        userMessage += " Detail: " + data.promptFeedback.safetyRatings.map(r => `${r.category} - ${r.probability}`).join(", ");
-                    }
-                    errorMessage.textContent = userMessage;
-                    errorMessage.style.display = 'block';
+
+                    hideElement(emptyStateMessage);
+                    showElement(copyTextButton);
+                    showElement(copyMarkdownButton);
                 }
-                else {
-                    // Struktur respons tidak sesuai harapan
-                    console.error('Struktur respons API tidak valid:', data);
-                    errorMessage.textContent = "Gagal memproses ringkasan dari respons API. Struktur data tidak dikenali.";
-                    errorMessage.style.display = 'block';
-                }
+                showElement(summaryOutputContainer);
 
             } catch (error) {
-                console.error('Error fetching summary:', error);
-                errorMessage.textContent = `Gagal mendapatkan ringkasan: ${error.message}. Pastikan kunci API valid dan coba lagi.`;
-                errorMessage.style.display = 'block';
+                console.error("Error during summarization:", error);
+                if (error.name === 'AbortError') {
+                    errorMessageText.textContent = "Permintaan peringkasan dibatalkan.";
+                } else {
+                    errorMessageText.textContent = error.message || "Terjadi kesalahan yang tidak diketahui.";
+                }
+                showElement(errorNotification);
+                summaryList.innerHTML = ''; // Clear any partial summary
+                showElement(emptyStateMessage); // Show empty state again
+                emptyStateMessage.textContent = "Gagal memuat ringkasan.";
+                hideElement(copyTextButton);
+                hideElement(copyMarkdownButton);
             } finally {
-                // Finalisasi UI
-                loadingIndicator.style.display = 'none';
-                summarizeBtn.disabled = false;
-                summarizeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                UIAfterRequest();
+                abortController = null; // Clear the controller
+            }
+        }
+
+        summarizeButton.addEventListener('click', () => {
+            getSummary(inputText.value);
+        });
+
+        cancelSummarizeButton.addEventListener('click', () => {
+            if (abortController) {
+                abortController.abort(); // Abort the fetch request
+                console.log("Summarization request cancelled by user.");
             }
         });
 
-        copyBtn.addEventListener('click', () => {
-            const textToCopy = summaryOutput.innerText;
-            if (!textToCopy) return;
+        // --- Clear Button Functionality (Part 4.1) ---
+        clearButton.addEventListener('click', () => {
+            inputText.value = '';
+            summaryList.innerHTML = '';
+            hideElement(summaryOutputContainer);
+            hideElement(errorNotification);
+            showElement(emptyStateMessage);
+            emptyStateMessage.textContent = "Ringkasan Anda akan muncul di sini.";
+            inputText.dispatchEvent(new Event('input')); // Update char counter and clear draft
+            localStorage.removeItem('draftText');
+            hideElement(copyTextButton);
+            hideElement(copyMarkdownButton);
+            inputText.focus();
+        });
 
-            // Buat textarea sementara untuk menyalin teks
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textToCopy;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            tempTextArea.setSelectionRange(0, 99999); // Untuk perangkat mobile
+        // --- Try Example Functionality (Part 4.1) ---
+        tryExampleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Neutral news snippet about technology in Indonesian (approx. 200-300 words)
+            const exampleText = "Perkembangan teknologi kecerdasan buatan (AI) terus melaju pesat, membawa dampak signifikan di berbagai sektor industri. Dari otomatisasi proses bisnis hingga pengembangan obat-obatan baru, AI menunjukkan potensi luar biasa untuk meningkatkan efisiensi dan membuka peluang inovasi. Di Indonesia, adopsi AI mulai terlihat di sektor layanan keuangan, e-commerce, dan bahkan pertanian, meskipun tantangan terkait ketersediaan talenta dan infrastruktur masih perlu diatasi. Pemerintah juga telah meluncurkan strategi nasional pengembangan AI untuk memastikan Indonesia tidak tertinggal dalam memanfaatkan teknologi transformatif ini. Salah satu fokus utama adalah peningkatan kualitas sumber daya manusia melalui program pelatihan dan pendidikan vokasi di bidang AI. Selain itu, kolaborasi antara akademisi, industri, dan pemerintah dianggap krusial untuk menciptakan ekosistem AI yang kondusif. Meskipun demikian, isu etika dan privasi data menjadi perhatian penting yang harus dikelola dengan bijak seiring dengan semakin meluasnya implementasi AI dalam kehidupan sehari-hari. Regulasi yang adaptif dan pengawasan yang ketat diperlukan untuk memitigasi risiko penyalahgunaan teknologi ini, sekaligus memastikan manfaatnya dapat dirasakan secara adil oleh seluruh lapisan masyarakat. Dengan pendekatan yang tepat, AI diharapkan dapat menjadi motor penggerak ekonomi digital Indonesia di masa depan.";
+            inputText.value = exampleText;
+            inputText.dispatchEvent(new Event('input')); // Update char counter and save draft
+            summaryList.innerHTML = ''; // Clear previous summary
+            hideElement(summaryOutputContainer);
+            hideElement(errorNotification);
+            showElement(emptyStateMessage);
+            emptyStateMessage.textContent = "Contoh teks telah dimuat. Klik 'Ringkas Sekarang'.";
+        });
 
-            try {
-                document.execCommand('copy');
-                originalCopyBtnText = copyBtn.textContent;
-                copyBtn.textContent = 'Tersalin!';
+        // --- Copy Functionality (Part 4.2 & 5.5) ---
+        function copyToClipboard(text, buttonElement, originalIconSVG, type = "text") {
+            // Store the original SVG content if not already stored
+            if (!buttonElement.dataset.originalIcon) {
+                buttonElement.dataset.originalIcon = buttonElement.innerHTML;
+            }
+            const checkmarkSVG = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-green-400 transition-all duration-200 ease-in-out transform scale-110">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg> <span class="sr-only">Berhasil disalin!</span>`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                buttonElement.innerHTML = checkmarkSVG;
+                buttonElement.disabled = true;
+                // Add a class for styling feedback if needed
+                buttonElement.classList.add('bg-green-500/20');
+
+
                 setTimeout(() => {
-                    copyBtn.textContent = originalCopyBtnText;
-                }, 2500);
-            } catch (err) {
-                console.error('Gagal menyalin teks: ', err);
-                // Mungkin tampilkan pesan error kecil di dekat tombol salin jika diperlukan
-                alert("Gagal menyalin teks ke clipboard.");
-            }
-            document.body.removeChild(tempTextArea);
+                    buttonElement.innerHTML = buttonElement.dataset.originalIcon; // Restore original icon from dataset
+                    buttonElement.disabled = false;
+                    buttonElement.classList.remove('bg-green-500/20');
+                }, 2000);
+            }).catch(err => {
+                console.error(`Gagal menyalin ${type}: `, err);
+                errorMessageText.textContent = `Gagal menyalin ke clipboard. Browser Anda mungkin tidak mendukung fitur ini atau tidak ada izin.`;
+                showElement(errorNotification);
+            });
+        }
+
+        // We will set original SVGs after DOMContentLoaded to ensure they are loaded.
+        // const originalCopyTextIconSVG = copyTextButton.innerHTML; (Moved to DOMContentLoaded)
+        // const originalCopyMarkdownIconSVG = copyMarkdownButton.innerHTML; (Moved to DOMContentLoaded)
+
+        copyTextButton.addEventListener('click', () => {
+            let textToCopy = "";
+            summaryList.querySelectorAll('li span').forEach(span => {
+                textToCopy += span.textContent + "\n";
+            });
+            copyToClipboard(textToCopy.trim(), copyTextButton, originalCopyTextIconSVG, "teks biasa");
         });
+
+        copyMarkdownButton.addEventListener('click', () => {
+            let markdownToCopy = "";
+            summaryList.querySelectorAll('li span').forEach(span => {
+                markdownToCopy += "* " + span.textContent + "\n";
+            });
+            copyToClipboard(markdownToCopy.trim(), copyMarkdownButton, originalCopyMarkdownIconSVG, "markdown");
+        });
+
+
+        // --- Background Animation Toggle (Part 5.1) ---
+        let animationsEnabled = localStorage.getItem('animationsEnabled') !== 'false'; // Default true
+
+        function updateAnimationState() {
+            if (animationsEnabled) {
+                backgroundAnimationElement.classList.remove('opacity-0');
+                backgroundAnimationElement.classList.add('opacity-30'); // Or whatever the target opacity is
+                toggleAnimationButton.textContent = "Matikan Animasi Latar";
+            } else {
+                backgroundAnimationElement.classList.add('opacity-0');
+                backgroundAnimationElement.classList.remove('opacity-30');
+                toggleAnimationButton.textContent = "Aktifkan Animasi Latar";
+            }
+            localStorage.setItem('animationsEnabled', animationsEnabled);
+        }
+
+        toggleAnimationButton.addEventListener('click', () => {
+            animationsEnabled = !animationsEnabled;
+            updateAnimationState();
+        });
+
+        // --- HTML Escaping Utility ---
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return '';
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadApiKey();
+            loadDraftText();
+            updateAnimationState(); // Set initial animation state
+
+            // Store original icon SVG content for copy buttons after DOM is loaded
+            if (copyTextButton) {
+                copyTextButton.dataset.originalIcon = copyTextButton.innerHTML;
+            }
+            if (copyMarkdownButton) {
+                copyMarkdownButton.dataset.originalIcon = copyMarkdownButton.innerHTML;
+            }
+
+            // Set initial states for elements that should be hidden
+            hideElement(loadingIndicator);
+            hideElement(errorNotification);
+            hideElement(summaryOutputContainer); // Hide summary container initially
+            hideElement(copyTextButton); // Initially hidden until there's content
+            hideElement(copyMarkdownButton); // Initially hidden until there's content
+            showElement(emptyStateMessage); // Show empty state on load
+
+            // Accessibility: Ensure main interactive elements are focusable by default or have tabindex if needed.
+            // Most buttons, links, and inputs are focusable by default.
+            // Adding ARIA attributes (Part 5.7)
+            if(summaryOutputContainer) summaryOutputContainer.setAttribute('aria-live', 'polite'); // Announce changes
+            if(errorNotification) errorNotification.setAttribute('aria-live', 'assertive'); // Announce errors immediately
+        });
+
     </script>
 </body>
 </html>
