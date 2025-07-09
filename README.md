@@ -2,6 +2,8 @@
 
 ![image](https://github.com/user-attachments/assets/d1c4d4c2-5af2-40be-ba12-75d39739762f)
 
+![image](https://github.com/user-attachments/assets/4227a979-06b0-497e-b0c1-09cda765a295)
+
 "Peringkas Cerdas" adalah aplikasi web sederhana yang memungkinkan pengguna meringkas teks panjang menjadi poin-poin ringkasan yang padat dan mudah dicerna. Aplikasi ini dirancang untuk membantu pengguna memahami inti dari suatu dokumen atau artikel dengan cepat, didukung oleh kemampuan kecerdasan buatan dari Google Gemini API.
 
 ## Fitur Utama
